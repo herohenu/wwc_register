@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"log"
 	"wwc_register/helper"
 )
@@ -8,6 +9,9 @@ import (
 func (p *Person) AddUser() (err error) {
 	param := AddUseInput(p)
 	resp, err := helper.DynOp(param)
-	log.Println("resp", resp)
-	return err
+	if err != nil {
+		return err
+	}
+	log.Println("AddUser resp", resp.(dynamodb.PutItemOutput))
+	return nil
 }

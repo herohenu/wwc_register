@@ -15,26 +15,14 @@ type RegController struct {
 
 func (c *RegController) AddUser() {
 	var student models.Person
-	var email models.Email
-
-	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &email); err != nil {
-		log.Println("email", email)
-		resp := GetErrorResp(4002)
-		c.Data["json"] = &resp
-		log.Println("err:", err, "resp:", resp)
-		c.ServeJSON()
-		c.StopRun()
-	}
-
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &student); err != nil {
 		log.Println("student", student)
 		resp := GetErrorResp(4002)
 		c.Data["json"] = &resp
 		log.Println("err:", err, "resp:", resp)
 		c.ServeJSON()
-		c.StopRun()
 	}
-
+	log.Println("AddUser Request:", student)
 	err := student.AddUser()
 
 	if err != nil {
@@ -42,13 +30,13 @@ func (c *RegController) AddUser() {
 		c.Data["json"] = &resp
 		log.Println("err:", err, "resp:", resp)
 		c.ServeJSON()
-		c.StopRun()
 	}
-
 	resp := RespOK()
 	c.Data["json"] = &resp
+	//c.Data["json"] = "{\"ObjectId\":\"" + "123" + "\"}"
+	log.Println("Respons OK:", resp)
+	log.Println("Data:", c.Data["json"])
 	c.ServeJSON()
-	c.StopRun()
 
 }
 

@@ -16,17 +16,19 @@ import (
 const (
 	API_REGION       = "us-west-2"
 	S3_BUCKET_REGION = "us-west-2"
-	CRED_FILE_PATH   = "../../../.aws/credentials"
-	PROFILE          = "wwc"
+	//CRED_FILE_PATH   = "../../../.aws/credentials"
+	//CRED_FILE_PATH = "cygdrive/c/Users/pumpkin pai/.aws/credentials"
+	CRED_FILE_PATH = "C:\\Users\\pumpkin pai\\.aws\\credentials"
+	PROFILE        = "wwc"
 )
 
 /*******
-
-Credentials
+	Credentials
 ********/
 func InitConfig(region string) (*aws.Config, error) {
-	//creds := GetCredentialShared()
-	creds, conf := GetCredentialChain()
+	creds := GetCredentialShared(PROFILE)
+	conf := aws.NewConfig().WithRegion(region).WithCredentials(creds)
+	//creds, conf := GetCredentialChain()
 	val, err := creds.Get()
 	if err != nil {
 		log.Println("InitConfig:", err)
@@ -35,7 +37,9 @@ func InitConfig(region string) (*aws.Config, error) {
 	conf.WithRegion(region).WithCredentials(creds)
 	return conf, nil
 }
-
+func GetCredentialShared(profile string) *credentials.Credentials {
+	return credentials.NewSharedCredentials(CRED_FILE_PATH, profile)
+}
 func GetCredentialChain() (*credentials.Credentials, *aws.Config) {
 	config := aws.NewConfig()
 	ec2m := ec2metadata.New(session.New(), config)
